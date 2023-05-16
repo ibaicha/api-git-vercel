@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email     String @unique
+  username String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  posts Post[] @relation("user_posts")
+  comments Comment[] @relation("user_comments")
+  role      Role?     @relation(fields: [roleId], references: [id])
+  roleId    Int?
+  profile   Profile?
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  adress   String
+  userId    Int? @unique
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id Int    @id @default(autoincrement())
+  title String
+  body  String
+  userId Int
+  user User @relation("user_posts", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  comments Comment[] @relation("post_comments")
+}
+
+model Comment {
+  id Int    @id @default(autoincrement())
+  content String
+  postId Int
+  userId Int
+  post Post @relation("post_comments", fields: [postId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user User @relation("user_comments", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Pays {
+  id    Int    @id @default(autoincrement())
+  name     String @unique
+  sigle String?
+  zones Zone[] @relation("pays_zones")
+}
+model Zone {
+  id Int    @id @default(autoincrement())
+  name    String
+  paysId Int
+  pays Pays @relation("pays_zones", fields: [paysId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  sousZones SousZone[] @relation("zone_sous_zones")
+}
+
+model SousZone {
+  id Int    @id @default(autoincrement())
+  name    String
+  zoneId Int
+  zones Zone @relation("zone_sous_zones", fields: [zoneId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  localites Localite[] @relation("sous_zone_localites")
+}
+
+model Localite {
+  id Int    @id @default(autoincrement())
+  name    String
+  sousZoneId Int
+  sousZone SousZone @relation("sous_zone_localites", fields: [sousZoneId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+}
+
+model TypeOp {
+  id    Int    @id @default(autoincrement())
+  name     String @unique
+  ops    Op[] @relation("op_type_ops")
+}
+
+model Op {
+  id Int    @id @default(autoincrement())
+  name    String
+  typeOpId Int
+  typeOp TypeOp @relation("op_type_ops", fields: [typeOpId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  producteurs Producteur[] @relation("op_producteurs")
+}
+
+model Producteur {
+  id Int    @id @default(autoincrement())
+  prenom    String
+  nom    String
+  cni    String
+  email    String
+  telephone    String
+  adresse    String
+  isActive    Boolean
+  opId Int
+  op Op @relation("op_producteurs", fields: [opId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  exploitations Exploitation[] @relation("producteur_exploitations")
+
+}
+
+model Annee {
+  id    Int    @id @default(autoincrement())
+  name     String 
+  description     String 
+  exploitations Exploitation[] @relation("annee_exploitations")
+}
+
+model Saison {
+  id    Int    @id @default(autoincrement())
+  value     Int @unique
+  name     String @unique
+  exploitations Exploitation[] @relation("saisons_exploitations")
+}
+model Filiere {
+  id    Int    @id @default(autoincrement())
+  name     String 
+  produits Produit[] @relation("filiere_produits")
+}
+model Produit {
+  id Int    @id @default(autoincrement())
+  name    String
+  isDerive Boolean
+  isEnsachage Boolean
+  isActive Boolean
+  filiereId Int
+  filiere Filiere @relation("filiere_produits", fields: [filiereId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  varietes Variete[] @relation("produit_varietes")
+}
+
+model Variete {
+  id Int    @id @default(autoincrement())
+  name    String
+  surface_unite String
+  quantite_unite String
+  rendement_unite String
+  isActive Boolean
+  produitId Int
+  produit Produit @relation("produit_varietes", fields: [produitId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  exploitations Exploitation[] @relation("variete_exploitations")
+
+}
+
+
+model TypeChargeExploitation {
+  id    Int    @id @default(autoincrement())
+  name     String @unique
+  chargeExploitations ChargeExploitation[] @relation("type_charge_exploitation_charge_exploitations")
+}
+
+model FamilleChargeExploitation {
+  id    Int    @id @default(autoincrement())
+  name     String @unique
+  chargeExploitations ChargeExploitation[] @relation("famille_charge_exploitation_charge_exploitations")
+}
+
+model ChargeExploitation {
+  id    Int    @id @default(autoincrement())
+  name     String
+  unite     String
+  pu     Float
+  quantite_unite_superficie     Float
+  isAchat     Boolean
+  typeChargeExploitationId Int
+  typeChargeExploitation TypeChargeExploitation @relation("type_charge_exploitation_charge_exploitations", fields: [typeChargeExploitationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  familleChargeExploitationId Int
+  familleChargeExploitation FamilleChargeExploitation @relation("famille_charge_exploitation_charge_exploitations", fields: [familleChargeExploitationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Exploitation {
+  id    Int    @id @default(autoincrement())
+  name     String
+  unite     String
+  pu_prevision     Float
+  surface_prevision     Float
+  pu     Float
+  surface     Float
+  production     Float
+  isAchat     Boolean
+  varieteId Int
+  variete Variete @relation("variete_exploitations", fields: [varieteId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  anneeId Int
+  annee Annee @relation("annee_exploitations", fields: [anneeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  saisonId Int
+  saison Saison @relation("saisons_exploitations", fields: [saisonId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  producteurId Int
+  producteur Producteur @relation("producteur_exploitations", fields: [producteurId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+}
