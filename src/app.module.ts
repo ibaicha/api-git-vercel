@@ -14,6 +14,7 @@ import { ProfileModule } from './auth/profile/profile.module';
 import { TypeOpModule } from './ops/type_op/type_op.module';
 import { OpModule } from './ops/op/op.module';
 import { ProducteurModule } from './ops/producteur/producteur.module';
+import { AppService } from './app.service';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { ProducteurModule } from './ops/producteur/producteur.module';
     LocaliteModule,
     TypeOpModule,
     OpModule,
-    ProducteurModule]
+    ProducteurModule],
+    providers: [AppService],
 })
 export class AppModule {}
