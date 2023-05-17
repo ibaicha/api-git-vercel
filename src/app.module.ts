@@ -32,7 +32,6 @@ import { AppService } from './app.service';
     LocaliteModule,
     TypeOpModule,
     OpModule,
-    ProducteurModule],
-    providers: [AppService],
+    ProducteurModule]
 })
 export class AppModule {}
