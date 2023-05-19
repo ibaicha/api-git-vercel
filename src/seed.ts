@@ -8,33 +8,95 @@ const prisma = new PrismaClient()
 // A `main` function so that we can use async/await
 async function main() {
   // ... your Prisma Client goes here
-  console.log(' BIENVENUE MEDIAN')
-  console.log(' -----------DELETE LOCALITES -----------')
-  await prisma.localite.deleteMany({})
-  console.log(' localite deleted')
-  await prisma.sousZone.deleteMany({})
-  console.log(' sous zone deleted')
-  await prisma.zone.deleteMany({})
-  console.log(' zone deleted')
-  await prisma.pays.deleteMany({})
-  console.log(' pays deleted')
-  console.log(' ---------DELETE POSTS --------')
-  await prisma.comment.deleteMany({})
-  console.log(' comment deleted')
-  await prisma.post.deleteMany({})
-  console.log(' post deleted')
-  console.log(' -----------DELETE AUTH -----------')
-  await prisma.profile.deleteMany({})
-  console.log(' profile deleted')
-  await prisma.user.deleteMany({})
-  console.log(' user deleted')
-  await prisma.role.deleteMany({})
-  console.log(' role deleted')
+ 
+  await deleteExploitation();
+  await deletePermission();
+  await deleteOp();
+  await deleteLocalite();
+  await deleteRoleUserProfile();
+  
 
   await addRoleUserProfile();
   await addLocalite();
 
     
+}
+
+async function deleteExploitation() {
+  console.log(' -----------DELETE EXPLOITATION -----------')
+  await prisma.exploitation.deleteMany({})
+  console.log(' exploitation deleted')
+}
+
+async function deletePermission() {
+  console.log(' -----------DELETE PERMISSION -----------')
+
+  await prisma.userZone.deleteMany({})
+  console.log(' userZone deleted')
+
+  await prisma.sousZone.deleteMany({})
+  console.log(' sousZone deleted')
+
+  await prisma.userLocalite.deleteMany({})
+  console.log(' UserLocalite deleted')
+
+  await prisma.userVillage.deleteMany({})
+  console.log(' userVillage deleted')
+
+  await prisma.userPointCollecte.deleteMany({})
+  console.log(' userPointCollecte deleted')
+
+}
+
+async function deleteOp() {
+
+  console.log(' -----------DELETE OP -----------')
+  await prisma.producteur.deleteMany({})
+  console.log(' producteur deleted')
+
+  await prisma.op.deleteMany({})
+  console.log(' op deleted')
+
+  await prisma.pointCollecte.deleteMany({})
+  console.log(' point collecte deleted')
+
+  await prisma.typeOp.deleteMany({})
+  console.log(' type op deleted')
+}
+
+
+async function deleteLocalite() {
+
+  console.log(' -----------DELETE LOCALITES -----------')
+
+  await prisma.village.deleteMany({})
+  console.log(' village deleted')
+
+  await prisma.localite.deleteMany({})
+  console.log(' localite deleted')
+
+  await prisma.sousZone.deleteMany({})
+  console.log(' sous zone deleted')
+
+  await prisma.zone.deleteMany({})
+  console.log(' zone deleted')
+
+  await prisma.pays.deleteMany({})
+  console.log(' pays deleted')
+  
+}
+
+async function deleteRoleUserProfile() {
+  console.log(' -----------DELETE USER -----------')
+  await prisma.profile.deleteMany({})
+  console.log(' profile deleted')
+
+  await prisma.user.deleteMany({})
+  console.log(' user deleted')
+  
+  await prisma.role.deleteMany({})
+  console.log(' role deleted')
+  
 }
 
 async function addRoleUserProfile() {
@@ -67,13 +129,50 @@ async function addRoleUserProfile() {
         "userId": user_iba_gmx_fr.id
       },
     });
+
+    // ADD ROLE AGENCE
+    console.log(' add role: Agence')
+    const role_agence = await prisma.role.create({
+      data: {
+        "name": "Agence"
+      },
+    });
+    console.log(' -----> add user: user_jules_gmx_fr')
+    const user_jules_gmx_fr = await prisma.user.create({
+      data: {
+        "username": "jules",
+        "email": "jules@gmx.fr",
+        "password": hash,
+        "roleId": role_agence.id
+      },
+    });
+    console.log(' -----> add profile: user_iba_gmx_fr')
+    const profile_jules_gmx_fr = await prisma.profile.create({
+      data: {
+        "firstName": "Souleymane",
+        "lastName": "DIAGNE",
+        "adress": "Sud, Saint-Louis",
+        "userId": user_jules_gmx_fr.id
+      },
+    });
+    
+
+    
+    // ADD ROLE ZONE
+    console.log(' add role: Zone')
+    const role_zone = await prisma.role.create({
+      data: {
+        "name": "Zone"
+      },
+    });
+
     console.log(' -----> add user: user_aby_gmx_fr')
     const user_aby_gmx_fr = await prisma.user.create({
       data: {
         "username": "aby",
         "email": "aby@gmx.fr",
         "password": hash,
-        "roleId": role_admin.id
+        "roleId": role_zone.id
       },
     });
     console.log(' -----> add profile: user_aby_gmx_fr')
@@ -86,67 +185,8 @@ async function addRoleUserProfile() {
       },
     });
     
-    // ADD ROLE AGENCE
-    console.log(' add role: Agence')
-    const role_agence = await prisma.role.create({
-      data: {
-        "name": "Agence"
-      },
-    });
-    console.log(' -----> add user: user_aicha_gmx_fr')
-    const user_aicha_gmx_fr = await prisma.user.create({
-      data: {
-        "username": "aicha",
-        "email": "aicha@gmx.fr",
-        "password": hash,
-        "roleId": role_agence.id
-      },
-    });
-    console.log(' -----> add profile: user_aicha_gmx_fr')
-    const profile_aicha_gmx_fr = await prisma.profile.create({
-      data: {
-        "firstName": "Aichatou",
-        "lastName": "CAMARA",
-        "adress": "Sud, Saint-Louis",
-        "userId": user_aicha_gmx_fr.id
-      },
-    });
-    console.log(' -----> add user: user_mouhamed_gmx_fr')
-    const user_mouhamed_gmx_fr = await prisma.user.create({
-      data: {
-        "username": "mouhamed",
-        "email": "mouhamed@gmx.fr",
-        "password": hash,
-        "roleId": role_agence.id
-      },
-    });
-    console.log(' -----> add profile: user_mouhamed_gmx_fr')
-    const profile_mouhamed_gmx_fr = await prisma.profile.create({
-      data: {
-        "firstName": "Mouhamed",
-        "lastName": "CAMARA",
-        "adress": "Sud, Saint-Louis",
-        "userId": user_mouhamed_gmx_fr.id
-      },
-    });
-    
-    // ADD ROLE ZONE
-    console.log(' add role: Zone')
-    const role_zone = await prisma.role.create({
-      data: {
-        "name": "Zone"
-      },
-    });
-    console.log(' -----> add user: user_jules_gmx_fr')
-    const user_jules_gmx_fr = await prisma.user.create({
-      data: {
-        "username": "jules",
-        "email": "jules@gmx.fr",
-        "password": hash,
-        "roleId": role_agence.id
-      },
-    });
-    
+
+
     // ADD ROLE SOUS ZONE
     console.log(' add role: Sous Zone')
     const role_sous_zone = await prisma.role.create({
@@ -160,9 +200,21 @@ async function addRoleUserProfile() {
         "username": "babacar",
         "email": "babacar@gmx.fr",
         "password": hash,
-        "roleId": role_agence.id
+        "roleId": role_sous_zone.id
       },
     });
+
+    console.log(' -----> add profile: user_babacar_gmx_fr')
+    const profile_babacar_gmx_fr = await prisma.profile.create({
+      data: {
+        "firstName": "Babacar",
+        "lastName": "CAMARA",
+        "adress": "Sud, Saint-Louis",
+        "userId": user_babacar_gmx_fr.id
+      },
+    });
+
+
     // ADD ROLE LOCALITE
     console.log(' -----> add role: Localite')
     const role_localite = await prisma.role.create({
@@ -170,13 +222,79 @@ async function addRoleUserProfile() {
         "name": "Localite"
       },
     });
+    console.log(' -----> add user: user_aicha_gmx_fr')
+    const user_aicha_gmx_fr = await prisma.user.create({
+      data: {
+        "username": "aicha",
+        "email": "aicha@gmx.fr",
+        "password": hash,
+        "roleId": role_localite.id
+      },
+    });
+    console.log(' -----> add profile: user_aicha_gmx_fr')
+    const profile_aicha_gmx_fr = await prisma.profile.create({
+      data: {
+        "firstName": "Aichatou",
+        "lastName": "CAMARA",
+        "adress": "Sud, Saint-Louis",
+        "userId": user_aicha_gmx_fr.id
+      },
+    });
+
+    // ADD ROLE POINT COLLECTE
+        console.log(' -----> add role: Point Collecte')
+        const role_point_collecte = await prisma.role.create({
+          data: {
+            "name": "Point Collecte"
+          },
+      });
+
+      console.log(' -----> add user: user_mouhamed_gmx_fr')
+      const user_mouhamed_gmx_fr = await prisma.user.create({
+        data: {
+          "username": "mouhamed",
+          "email": "mouh@gmx.fr",
+          "password": hash,
+          "roleId": role_point_collecte.id
+        },
+      });
+      console.log(' -----> add profile: user_mouhamed_gmx_fr')
+      const profile_mouhamed_gmx_fr = await prisma.profile.create({
+        data: {
+          "firstName": "Mouhamed",
+          "lastName": "CAMARA",
+          "adress": "Sud, Saint-Louis",
+          "userId": user_mouhamed_gmx_fr.id
+        },
+      });
+
+
+ // ADD ROLE OP
+ console.log(' -----> add role: Point Collecte')
+ const role_op= await prisma.role.create({
+   data: {
+     "name": "Op"
+   },
+});
+
+
     console.log(' -----> add user: user_jeyli_gmx_fr')
     const user_jeyli_gmx_fr = await prisma.user.create({
       data: {
         "username": "jeyli",
         "email": "jeyli@gmx.fr",
         "password": hash,
-        "roleId": role_agence.id
+        "roleId": role_op.id
+      },
+    });
+
+    console.log(' -----> add profile: user_jeylany_gmx_fr')
+    const profile_jeylany_gmx_fr = await prisma.profile.create({
+      data: {
+        "firstName": "Jeylany",
+        "lastName": "CAMARA",
+        "adress": "Sud, Saint-Louis",
+        "userId": user_jeyli_gmx_fr.id
       },
     });
 }
@@ -216,12 +334,116 @@ async function addLocalite(){
         "sousZoneId": sous_zone_saint_louis.id
       },
     });
+    console.log(' ---------> add Point Collecte: SAINT LOUIS')
+    const point_collecte_pc1_saint_louis = await prisma.pointCollecte.create({
+      
+      data: {
+        "name": "PC1 SAINT LOUIS",
+        "localiteId": localite_saint_louis.id
+      },
+    });
+
+    console.log(' ----------- ADD TYPE OP -----------')
+    console.log(' add op: GIE')
+    const type_op_gie = await prisma.typeOp.create({
+      data: {
+        "name": "GIE",
+      },
+    });
+    console.log(' add op: SV')
+    const type_op_sv = await prisma.typeOp.create({
+      data: {
+        "name": "SV",
+      },
+    });
+
+    let i = 0;
+      while (i < 2) {
+        console.log(' ---------> add Op: Op gie - ' + i + ' ' + point_collecte_pc1_saint_louis.name)
+        await prisma.op.create({
+          
+          data: {
+            "name": "op - gie " + i + ' ' + point_collecte_pc1_saint_louis.name,
+            "typeOpId": type_op_gie.id,
+            "pointCollecteId": point_collecte_pc1_saint_louis.id
+          },
+        });
+        i++;
+      }
+      let k = 0;
+      while (k< 2) {
+        console.log(' ---------> add Op: Op - sv ' + k + ' ' + point_collecte_pc1_saint_louis.name)
+        await prisma.op.create({
+          
+          data: {
+            "name": "op - sv " + k + ' ' + point_collecte_pc1_saint_louis.name,
+            "typeOpId": type_op_sv.id,
+            "pointCollecteId": point_collecte_pc1_saint_louis.id
+          },
+        });
+        k++;
+      }
+
+
+      console.log(' ---------> add Point Collecte: SAINT LOUIS')
+      const point_collecte_pc2_saint_louis = await prisma.pointCollecte.create({
+        
+        data: {
+          "name": "PC2 SAINT LOUIS",
+          "localiteId": localite_saint_louis.id
+        },
+      });
+      let l = 0;
+      while (l < 2) {
+        console.log(' ---------> add Op: Op gie - ' + l + ' ' + point_collecte_pc2_saint_louis.name)
+        await prisma.op.create({
+          
+          data: {
+            "name": "op - gie " + l + ' ' + point_collecte_pc2_saint_louis.name,
+            "typeOpId": type_op_gie.id,
+            "pointCollecteId": point_collecte_pc2_saint_louis.id
+          },
+        });
+        l++;
+      }
+      let m = 0;
+      while (m< 2) {
+        console.log(' ---------> add Op: Op - sv ' + m)
+        await prisma.op.create({
+          
+          data: {
+            "name": "op - sv " + m + ' ' + point_collecte_pc2_saint_louis.name,
+            "typeOpId": type_op_sv.id,
+            "pointCollecteId": point_collecte_pc2_saint_louis.id
+          },
+        });
+        m++;
+      }
+
+
+    
     console.log(' ---------> add localite: TILENE')
     const localite_tilene = await prisma.localite.create({
       
       data: {
         "name": "TILENE",
         "sousZoneId": sous_zone_saint_louis.id
+      },
+    });
+    console.log(' ---------> add Point Collecte: PC1 TILENE')
+    const point_collecte_pc1_tilene= await prisma.pointCollecte.create({
+      
+      data: {
+        "name": "PC1 TILENE",
+        "localiteId": localite_saint_louis.id
+      },
+    });
+    console.log(' ---------> add Point Collecte: PC2 TILENE')
+    const point_collecte_pc2_tilene = await prisma.pointCollecte.create({
+      
+      data: {
+        "name": "PC2 TILENE",
+        "localiteId": localite_saint_louis.id
       },
     });
 

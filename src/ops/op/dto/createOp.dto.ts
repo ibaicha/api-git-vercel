@@ -5,4 +5,6 @@ export class CreateOpDto {
     readonly name: string;
     @IsNotEmpty()
     readonly typeOpId: number;
+    @IsNotEmpty()
+    readonly pointCollecteId: number;
 }

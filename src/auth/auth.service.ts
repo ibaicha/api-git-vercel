@@ -10,6 +10,7 @@ import { MailerService } from 'src/mailer/mailer.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { DeleteAccountdto } from './dto/deleteAccount.dto';
+import { profile } from 'console';
 
 
 @Injectable()
@@ -20,6 +21,183 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
         ) {}
+
+        async getAll() {
+            return this.primaService.user.findMany(
+                {
+                    select: {
+                        id: true,
+                        email: true,
+                        username: true,
+                        password: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        profile:{
+                            select: {
+                                id: true,
+                                firstName: true,
+                                lastName: true
+                            }
+                        },
+                        role: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        },
+                        userZones: {
+                            select: {
+                                zone: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        pays: {
+                                            select: {
+                                                id: true,
+                                                name: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        userSousZones: {
+                            select: {
+                                sousZone: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        zones: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                pays: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true
+                                                    }
+                                                }
+                                            }
+                                        }
+                        }
+                      }
+                         
+                    }
+                    
+                        },
+                        userLocalites: {
+                            select: {
+                                localite: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        sousZone: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                zones: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true,
+                                                        pays: {
+                                                            select: {
+                                                                id: true,
+                                                                name: true
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+    
+                            
+                        },
+                        userPointCollectes: {
+                            select: {
+                                pointCollecte: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        localite: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                sousZone: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true,
+                                                        zones: {
+                                                            select: {
+                                                                id: true,
+                                                                name: true,
+                                                                pays: {
+                                                                    select: {
+                                                                        id: true,
+                                                                        name: true
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        
+                        },
+                        userOps: {
+                            select: {
+                                op: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        pointCollecte: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                localite: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true,
+                                                        sousZone: {
+                                                            select: {
+                                                                id: true,
+                                                                name: true,
+                                                                zones: {
+                                                                    select: {
+                                                                        id: true,
+                                                                        name: true,
+                                                                        pays: {
+                                                                            select: {
+                                                                                id: true,
+                                                                                name: true
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                }
+                                            
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+    
+                    },
+        }
+                        },
+                      }
+                }
+
+
+            );
+        };
     async signup(signupDto: signupDto) {
         const { email, password, username , roleId} = signupDto;
         // ** Verifier si l'utilisateur est deja inscrit
@@ -44,7 +222,284 @@ export class AuthService {
     async signin(signinDto: signinDto) {
         const { email, password } = signinDto;
         // ** Vérifier si le user est deja inscrit
-        const user = await this.primaService.user.findUnique({ where: { email }});
+        const user = await this.primaService.user.findUnique({ 
+            where: { email },
+            /*
+            include: {
+                role: true,
+                profile: true,
+                userZones: {
+                    select: {
+                        zone: {
+                            select: {
+                                id: true,
+                                name: true,
+                                pays: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                    }
+                                }
+                            }
+                        },
+                    }
+                 
+                },
+                userSousZones: {
+                    select: {
+                        sousZone: {
+                            select: {
+                                id: true,
+                                name: true,
+                                
+                            }
+                        },
+                    }
+                },
+                userLocalites: {
+                    select: {
+                        localite: {
+                            select: {
+                                id: true,
+                                name: true,
+                                sousZone: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        zones: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                pays: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                
+                            }
+                        },
+                    }
+                },
+                userVillages: {
+                    select: {
+                        village: {
+                            select: {
+                                id: true,
+                                name: true,
+                                localite: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        sousZone: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                zones: {
+                                                    select: {
+                                                        id: true,
+                                                        name: true,
+                                                        pays: {
+                                                            select: {
+                                                                id: true,
+                                                                name: true
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                },
+             
+
+
+                    
+                }
+                */
+                select: {
+                    id: true,
+                    email: true,
+                    username: true,
+                    password: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    profile:{
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true
+                        }
+                    },
+                    role: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    },
+                    userZones: {
+                        select: {
+                            zone: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    pays: {
+                                        select: {
+                                            id: true,
+                                            name: true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    userSousZones: {
+                        select: {
+                            sousZone: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    zones: {
+                                        select: {
+                                            id: true,
+                                            name: true,
+                                            pays: {
+                                                select: {
+                                                    id: true,
+                                                    name: true
+                                                }
+                                            }
+                                        }
+                                    }
+                    }
+                  }
+                     
+                }
+                
+                    },
+                    userLocalites: {
+                        select: {
+                            localite: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    sousZone: {
+                                        select: {
+                                            id: true,
+                                            name: true,
+                                            zones: {
+                                                select: {
+                                                    id: true,
+                                                    name: true,
+                                                    pays: {
+                                                        select: {
+                                                            id: true,
+                                                            name: true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        
+                    },
+                    userPointCollectes: {
+                        select: {
+                            pointCollecte: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    localite: {
+                                        select: {
+                                            id: true,
+                                            name: true,
+                                            sousZone: {
+                                                select: {
+                                                    id: true,
+                                                    name: true,
+                                                    zones: {
+                                                        select: {
+                                                            id: true,
+                                                            name: true,
+                                                            pays: {
+                                                                select: {
+                                                                    id: true,
+                                                                    name: true
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    
+                    },
+                    userOps: {
+                        select: {
+                            op: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    pointCollecte: {
+                                        select: {
+                                            id: true,
+                                            name: true,
+                                            localite: {
+                                                select: {
+                                                    id: true,
+                                                    name: true,
+                                                    sousZone: {
+                                                        select: {
+                                                            id: true,
+                                                            name: true,
+                                                            zones: {
+                                                                select: {
+                                                                    id: true,
+                                                                    name: true,
+                                                                    pays: {
+                                                                        select: {
+                                                                            id: true,
+                                                                            name: true
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                            }
+                                        
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                },
+    }
+                    },
+                  }
+            },
+        );
+
+       
+      
+        
         if(!user) throw new NotFoundException('User does not exist');
         // ** Comparer le mot de passe
         const match = await bcrypt.compare(password, user.password);
@@ -61,9 +516,19 @@ export class AuthService {
 
         return {
             token,
+            
             user: {
+                id : user.id,
                 username : user.username,
-                email : user.email
+                email : user.email,
+                role: user.role,
+                profile: user.profile,
+                userZones: user.userZones,
+                userSousZones: user.userSousZones,
+                userLocalites: user.userLocalites,
+                userPointCollectes: user.userPointCollectes,
+                //userVillages: user.userVillages,
+                userOps: user.userOps
             }
 
         };

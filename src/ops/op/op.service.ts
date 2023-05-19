@@ -17,8 +17,8 @@ export class OpService {
         return op;
     }
     async create(createOpDto: CreateOpDto) {
-        const { name,typeOpId} = createOpDto;
-        await this.prismaService.op.create({data : { name, typeOpId}});
+        const { name,typeOpId,pointCollecteId} = createOpDto;
+        await this.prismaService.op.create({data : { name, typeOpId,pointCollecteId}});
         return {data : "Op created"};
     }
 

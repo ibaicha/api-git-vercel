@@ -6,4 +6,5 @@ export class signinDto {
     @IsNotEmpty()
     readonly password: string;
     readonly roleId: number;
+  
 }

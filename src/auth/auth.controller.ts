@@ -1,4 +1,4 @@
-import { Controller,Post,Delete } from '@nestjs/common';
+import { Controller,Get,Post,Delete } from '@nestjs/common';
 import { Body, Req, UseGuards} from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { signupDto } from './dto/signup.dto';
@@ -14,6 +14,14 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
+
+    @Get("users")
+    getAll() {
+        return this.authService.getAll();
+    }
+
+
+
     @Post("signup")
     signup(@Body() signupDto: signupDto) {
         return this.authService.signup(signupDto);

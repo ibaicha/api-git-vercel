@@ -14,6 +14,8 @@ import { ProfileModule } from './auth/profile/profile.module';
 import { TypeOpModule } from './ops/type_op/type_op.module';
 import { OpModule } from './ops/op/op.module';
 import { ProducteurModule } from './ops/producteur/producteur.module';
+import { PointCollecteModule } from './ops/point_collecte/point_collecte.module';
+import { VillageModule } from './localites/village/village.module';
 
 
 @Module({
@@ -31,6 +33,8 @@ import { ProducteurModule } from './ops/producteur/producteur.module';
     LocaliteModule,
     TypeOpModule,
     OpModule,
-    ProducteurModule]
+    ProducteurModule,
+    PointCollecteModule,
+    VillageModule]
 })
 export class AppModule {}

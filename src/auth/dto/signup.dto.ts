@@ -10,4 +10,5 @@ export class signupDto {
     @IsNotEmpty()
     readonly password: string;
     readonly roleId: number;
+    
 }

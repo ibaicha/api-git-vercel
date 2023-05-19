@@ -19,8 +19,8 @@ export class ProducteurService {
         
     }
     async create(createProducteurDto: CreateProducteurDto) {
-        const { prenom,nom, cni, email, telephone, adresse, isActive, opId} = createProducteurDto;
-        await this.prismaService.producteur.create({data : { prenom,nom, cni, email, telephone, adresse, isActive, opId}});
+        const { compte,prenom,nom, cni, email, telephone, adresse, isActive, opId} = createProducteurDto;
+        await this.prismaService.producteur.create({data : {compte, prenom,nom, cni, email, telephone, adresse, isActive, opId}});
         return {data : "Producteur created"};
     }
 
