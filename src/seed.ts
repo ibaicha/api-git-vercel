@@ -146,7 +146,7 @@ async function addRoleUserProfile() {
         "roleId": role_agence.id
       },
     });
-    console.log(' -----> add profile: user_iba_gmx_fr')
+    console.log(' -----> add profile: user_jules_gmx_fr')
     const profile_jules_gmx_fr = await prisma.profile.create({
       data: {
         "firstName": "Souleymane",
