@@ -15,10 +15,10 @@ async function main() {
   await deleteLocalite();
   await deleteRoleUserProfile();
   
-
+/*
   await addRoleUserProfile();
   await addLocalite();
-
+*/
     
 }
 
