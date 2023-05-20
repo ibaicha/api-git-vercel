@@ -316,6 +316,7 @@ model UserPointCollecte {
   pointCollecteId Int
   pointCollecte PointCollecte @relation("point_collecte_user_point_collectes", fields: [pointCollecteId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
+
 model UserOp {
   id    Int    @id @default(autoincrement())
   userId Int
